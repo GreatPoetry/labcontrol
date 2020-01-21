@@ -33,3 +33,7 @@ class robot:
         new_location = self.waypoints.loc[waypoint_name,:].tolist()
         if not self.__robot_interface.move(new_location):
             print('ERROR: Failed to move robot')
+
+    def wait_for_robot(self):
+        while not self.__robot_interface.ready_for_new_action():
+            pass

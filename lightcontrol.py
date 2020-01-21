@@ -14,6 +14,7 @@ class dmx_control:
         output_file_handle.write('\nLight control activated')
         output_file_handle.write(f'\nCurrent dmx: {self.__dmx}\n')
         output_file_handle.close()
+        self.__thread = threading.Thread(target=self.__show_dmx_change, args=(initial_dmx,))
 
     @property
     def dmx(self):
@@ -21,8 +22,8 @@ class dmx_control:
     
     @dmx.setter
     def dmx(self, value):
-        thread = threading.Thread(target=self.__show_dmx_change, args=(value,))
-        thread.start()
+        self.__thread = threading.Thread(target=self.__show_dmx_change, args=(value,))
+        self.__thread.start()
 
     def __show_dmx_change(self,value):
         if value == self.__dmx:
@@ -47,4 +48,9 @@ class dmx_control:
             print('ERROR: bad dmx values')
             return False
     
-        
+    def lights_ready(self):
+        return not self.__thread.is_alive()
+
+    def wait_for_lights(self):
+        while not self.lights_ready():
+            pass

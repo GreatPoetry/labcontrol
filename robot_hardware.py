@@ -21,6 +21,8 @@ class robot_hw:
         self._output = output
         self.__op_thread = threading.Thread(target = self.__show_start_robot)
         self.__op_thread.start()
+        while not self.ready_for_new_action():
+            pass
     
     @property
     def velocity(self):
